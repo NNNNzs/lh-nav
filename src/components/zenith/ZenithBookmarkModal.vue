@@ -112,10 +112,10 @@ function handleSave() {
             class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all"
           >
             <option value="all">常用推荐</option>
-            <option value="work">工作协同</option>
-            <option value="dev">开发技术</option>
-            <option value="design">设计灵感</option>
-            <option value="life">资讯探索</option>
+            <option value="work">办公效率</option>
+            <option value="ai">AI 助手</option>
+            <option value="media">影音娱乐</option>
+            <option value="social">社交资讯</option>
           </select>
         </div>
       </div>

@@ -22,10 +22,10 @@ interface DockTab {
 
 const dockTabs: DockTab[] = [
   { id: 'all', name: '常用推荐', icon: 'home' },
-  { id: 'work', name: '工作协同', icon: 'work' },
-  { id: 'dev', name: '开发技术', icon: 'auto_awesome' },
-  { id: 'design', name: '设计灵感', icon: 'palette' },
-  { id: 'life', name: '资讯探索', icon: 'explore' },
+  { id: 'work', name: '办公效率', icon: 'work' },
+  { id: 'ai', name: 'AI 助手', icon: 'auto_awesome' },
+  { id: 'media', name: '影音娱乐', icon: 'play_circle' },
+  { id: 'social', name: '社交资讯', icon: 'forum' },
 ]
 </script>
 

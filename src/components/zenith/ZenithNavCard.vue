@@ -20,20 +20,24 @@ const emit = defineEmits<{
     class="nav-item group flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/80 hover:bg-white/95 backdrop-blur-xl border border-white/70 shadow-glass-subtle hover:shadow-[0_12px_28px_rgba(0,0,0,0.14)] hover:-translate-y-1 transition-all duration-200"
     :data-cat="card.category"
   >
-    <!-- Card Icon Box -->
+    <!-- Card Icon Box (Android Squircle App Icon) -->
     <div
-      class="w-12 h-12 rounded-2xl text-white flex items-center justify-center shrink-0 shadow-icon group-hover:scale-105 transition-transform"
-      :class="[
-        card.iconBg,
-        card.id === 'notion' || card.id === 'sspai' ? 'font-serif font-black text-xl' : '',
-        card.id === 'zhihu' ? 'font-bold text-lg' : '',
-        card.id === 'v2ex' ? 'font-mono font-bold text-sm' : '',
-      ]"
+      class="w-12 h-12 rounded-2xl overflow-hidden shrink-0 shadow-icon group-hover:scale-105 transition-transform bg-white/30 flex items-center justify-center border border-black/5"
+      :class="[card.iconBg || '']"
     >
+      <!-- Real Android/iOS App Icon Image -->
+      <img
+        v-if="card.iconKind === 'img'"
+        :src="card.iconValue"
+        :alt="card.title"
+        class="w-full h-full object-cover rounded-2xl"
+        loading="lazy"
+      />
+
       <!-- SVG Icon -->
       <svg
-        v-if="card.iconKind === 'svg'"
-        :class="card.id === 'vercel' ? 'w-5 h-5 fill-white' : 'w-6 h-6 fill-white'"
+        v-else-if="card.iconKind === 'svg'"
+        class="w-6 h-6 fill-white"
         viewBox="0 0 24 24"
       >
         <path :d="card.iconValue" />
@@ -42,14 +46,13 @@ const emit = defineEmits<{
       <!-- Material Symbols Icon -->
       <span
         v-else-if="card.iconKind === 'material'"
-        class="material-symbols-outlined"
-        :class="card.iconValue === 'psychology' ? 'text-[26px]' : 'text-[24px]'"
+        class="material-symbols-outlined text-[24px]"
       >
         {{ card.iconValue }}
       </span>
 
       <!-- Text / Initial Character Icon -->
-      <span v-else>
+      <span v-else class="text-white font-bold text-lg">
         {{ card.iconValue }}
       </span>
     </div>

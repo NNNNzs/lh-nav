@@ -1,6 +1,6 @@
-export type ZenithCategoryKey = 'all' | 'work' | 'dev' | 'design' | 'life'
+export type ZenithCategoryKey = 'all' | 'work' | 'ai' | 'media' | 'social'
 
-export type IconKind = 'svg' | 'material' | 'text'
+export type IconKind = 'img' | 'svg' | 'material' | 'text'
 
 export interface ZenithBookmark {
   id: string
@@ -10,7 +10,7 @@ export interface ZenithBookmark {
   category: ZenithCategoryKey
   iconKind: IconKind
   iconValue: string
-  iconBg: string
+  iconBg?: string
   isPinned: boolean
 }
 
