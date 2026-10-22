@@ -211,7 +211,6 @@ export const ENGINES: ZenithEngine[] = [
     iconBg: 'bg-blue-600',
     url: 'https://www.baidu.com/s',
     param: 'wd',
-    shortcutKey: '1',
   },
   {
     id: 'google',
@@ -220,7 +219,6 @@ export const ENGINES: ZenithEngine[] = [
     iconBg: 'bg-blue-500',
     url: 'https://www.google.com/search',
     param: 'q',
-    shortcutKey: '2',
   },
   {
     id: 'bing',
@@ -229,7 +227,6 @@ export const ENGINES: ZenithEngine[] = [
     iconBg: 'bg-teal-600',
     url: 'https://www.bing.com/search',
     param: 'q',
-    shortcutKey: '3',
   },
   {
     id: 'github',
@@ -238,7 +235,6 @@ export const ENGINES: ZenithEngine[] = [
     iconBg: 'bg-slate-900',
     url: 'https://github.com/search',
     param: 'q',
-    shortcutKey: '4',
   },
 ]
 

@@ -60,21 +60,29 @@ function setInputRef(el: any) {
               v-for="eng in engines"
               :key="eng.id"
               type="button"
-              class="engine-opt w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-blue-50/70 text-slate-700 hover:text-blue-600 transition-colors text-xs font-medium cursor-pointer"
+              class="engine-opt w-full flex items-center justify-between px-3 py-2 rounded-xl transition-colors text-xs cursor-pointer"
+              :class="[
+                currentEngine.id === eng.id
+                  ? 'bg-blue-50/80 text-blue-600 font-semibold'
+                  : 'text-slate-700 hover:bg-slate-100/70 font-medium',
+              ]"
               @click="onSelectEngine(eng)"
             >
               <div class="flex items-center gap-2.5">
                 <span
-                  class="w-5 h-5 rounded-full text-white font-bold text-[11px] flex items-center justify-center"
+                  class="w-5 h-5 rounded-full text-white font-bold text-[11px] flex items-center justify-center shadow-sm"
                   :class="eng.iconBg"
                 >
                   {{ eng.icon }}
                 </span>
                 <span>{{ eng.name }}</span>
               </div>
-              <kbd class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-100 text-slate-400">
-                {{ eng.shortcutKey }}
-              </kbd>
+              <span
+                v-if="currentEngine.id === eng.id"
+                class="material-symbols-outlined text-[16px] text-blue-600 shrink-0"
+              >
+                check
+              </span>
             </button>
           </div>
         </div>

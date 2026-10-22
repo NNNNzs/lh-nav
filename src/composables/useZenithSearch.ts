@@ -29,14 +29,6 @@ export function useZenithSearch(onNotify?: (msg: string) => void) {
     if (e.key === 'Tab' && !isInputFocused) {
       e.preventDefault()
       inputRef.value?.focus()
-      return
-    }
-
-    if (!isInputFocused && ['1', '2', '3', '4'].includes(e.key)) {
-      const idx = parseInt(e.key, 10) - 1
-      if (ENGINES[idx]) {
-        selectEngine(ENGINES[idx])
-      }
     }
   }
 

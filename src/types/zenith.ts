@@ -21,7 +21,7 @@ export interface ZenithEngine {
   iconBg: string
   url: string
   param: string
-  shortcutKey: string
+  shortcutKey?: string
 }
 
 export interface ZenithCategoryTab {
