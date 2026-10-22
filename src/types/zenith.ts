@@ -34,3 +34,10 @@ export interface HotShortcut {
   label: string
   url: string
 }
+
+export interface ZenithWallpaperItem {
+  id: string
+  name: string
+  category: 'nature' | 'universe' | 'urban' | 'abstract'
+  url: string
+}

@@ -1,26 +1,49 @@
-import { ref } from 'vue'
-import { WALLPAPERS } from '@/constants/zenithData'
+import { onMounted, ref } from 'vue'
+import { DEFAULT_WALLPAPER_URL, PRESET_WALLPAPERS } from '@/constants/zenithData'
+
+const STORAGE_KEY = 'zenith_current_wallpaper_v2'
 
 export function useZenithWallpaper() {
-  const currentWpIndex = ref(-1) // -1 is default twilight nature
-  const isCustomWp = ref(false)
-  const currentWpUrl = ref('')
+  const currentWpUrl = ref(DEFAULT_WALLPAPER_URL)
 
-  function toggleWallpaper() {
-    currentWpIndex.value = (currentWpIndex.value + 1) % (WALLPAPERS.length + 1)
-    if (currentWpIndex.value >= WALLPAPERS.length) {
-      currentWpIndex.value = -1
-      isCustomWp.value = false
-      currentWpUrl.value = ''
-    } else {
-      isCustomWp.value = true
-      currentWpUrl.value = WALLPAPERS[currentWpIndex.value]
+  function loadSaved() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        currentWpUrl.value = saved
+      }
+    } catch {
+      currentWpUrl.value = DEFAULT_WALLPAPER_URL
     }
   }
 
+  function setWallpaper(url: string) {
+    if (!url.trim()) return
+    currentWpUrl.value = url.trim()
+    try {
+      localStorage.setItem(STORAGE_KEY, url.trim())
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  function resetToDefault() {
+    currentWpUrl.value = DEFAULT_WALLPAPER_URL
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  onMounted(() => {
+    loadSaved()
+  })
+
   return {
-    isCustomWp,
     currentWpUrl,
-    toggleWallpaper,
+    wallpapers: PRESET_WALLPAPERS,
+    setWallpaper,
+    resetToDefault,
   }
 }

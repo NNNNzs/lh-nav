@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const emit = defineEmits<{
   (e: 'openAddModal'): void
-  (e: 'toggleWallpaper'): void
+  (e: 'openWallpaperModal'): void
 }>()
 </script>
 
@@ -43,14 +43,14 @@ const emit = defineEmits<{
           <span>添加卡片</span>
         </button>
 
-        <!-- Wallpaper visual toggle button -->
+        <!-- Wallpaper visual modal button -->
         <button
           type="button"
           class="p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/30 text-white transition-all shadow-glass cursor-pointer"
-          title="外观风格"
-          @click="emit('toggleWallpaper')"
+          title="壁纸设置"
+          @click="emit('openWallpaperModal')"
         >
-          <span class="material-symbols-outlined text-[18px]">dark_mode</span>
+          <span class="material-symbols-outlined text-[18px]">wallpaper</span>
         </button>
       </div>
     </div>

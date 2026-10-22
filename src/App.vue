@@ -8,9 +8,10 @@ import ZenithFocusWidget from '@/components/zenith/ZenithFocusWidget.vue'
 import ZenithFooter from '@/components/zenith/ZenithFooter.vue'
 import ZenithHeader from '@/components/zenith/ZenithHeader.vue'
 import ZenithHeroClock from '@/components/zenith/ZenithHeroClock.vue'
+import ZenithNoteWidget from '@/components/zenith/ZenithNoteWidget.vue'
 import ZenithSearchBar from '@/components/zenith/ZenithSearchBar.vue'
 import ZenithToast from '@/components/zenith/ZenithToast.vue'
-import ZenithAiWidget from '@/components/zenith/ZenithAiWidget.vue'
+import ZenithWallpaperModal from '@/components/zenith/ZenithWallpaperModal.vue'
 import { useZenithBookmarks } from '@/composables/useZenithBookmarks'
 import { useZenithToast } from '@/composables/useZenithToast'
 import { useZenithWallpaper } from '@/composables/useZenithWallpaper'
@@ -26,19 +27,25 @@ const {
   resetLayout,
 } = useZenithBookmarks()
 
-const { isCustomWp, currentWpUrl, toggleWallpaper } = useZenithWallpaper()
+const { currentWpUrl, wallpapers, setWallpaper, resetToDefault: resetWallpaper } = useZenithWallpaper()
 const { isVisible: isToastVisible, toastText, showToast } = useZenithToast()
 
 const isAddModalOpen = ref(false)
+const isWallpaperModalOpen = ref(false)
 
 function handleFilterCategory(cat: ZenithCategoryKey) {
   setCategory(cat)
   showToast('已筛选分类')
 }
 
-function handleToggleWallpaper() {
-  toggleWallpaper()
-  showToast('已切换精美暮光/自然壁纸')
+function handleSelectWallpaper(url: string) {
+  setWallpaper(url)
+  showToast('已更换精美高清壁纸')
+}
+
+function handleResetWallpaper() {
+  resetWallpaper()
+  showToast('已恢复默认暮光壁纸')
 }
 
 function handleShowTip() {
@@ -76,9 +83,6 @@ function handleTogglePin(id: string) {
 }
 
 const wallpaperStyle = computed(() => {
-  if (!isCustomWp.value) {
-    return {}
-  }
   return {
     backgroundImage: `
       radial-gradient(circle at 15% 20%, rgba(251, 146, 60, 0.28), transparent 45%),
@@ -105,7 +109,7 @@ const wallpaperStyle = computed(() => {
     <ZenithDock
       :active-category="activeCategory"
       @filter-category="handleFilterCategory"
-      @toggle-wallpaper="handleToggleWallpaper"
+      @open-wallpaper-modal="isWallpaperModalOpen = true"
       @open-add-modal="isAddModalOpen = true"
       @show-tip="handleShowTip"
     />
@@ -113,7 +117,7 @@ const wallpaperStyle = computed(() => {
     <!-- Top Glass Header -->
     <ZenithHeader
       @open-add-modal="isAddModalOpen = true"
-      @toggle-wallpaper="handleToggleWallpaper"
+      @open-wallpaper-modal="isWallpaperModalOpen = true"
     />
 
     <!-- Main Center Content -->
@@ -137,14 +141,15 @@ const wallpaperStyle = computed(() => {
 
       <!-- Grid Container with WeTab-inspired Multi-Sized Widget Layout -->
       <div class="w-full space-y-4">
-        <!-- Top Row Feature Widgets: Large Anniversary/Focus Widget + Daily Quote / AI Assistant Widget -->
+        <!-- Top Row Feature Widgets: Large Focus Widget + Apple Style Notes Widget -->
         <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
           <ZenithFocusWidget
             @open-focus="showToast('已进入专注计时')"
             @open-todos="showToast('打开待办清单 (共 4 项)')"
           />
-          <ZenithAiWidget
-            @open-ai="showToast('正在呼出 Zenith 智能助手...')"
+          <ZenithNoteWidget
+            @copy="showToast('便签内容已复制到剪贴板')"
+            @clear="showToast('已清空便签')"
           />
         </div>
 
@@ -166,6 +171,15 @@ const wallpaperStyle = computed(() => {
     <ZenithBookmarkModal
       v-model="isAddModalOpen"
       @save="handleSaveBookmark"
+    />
+
+    <!-- Modal: Wallpaper Gallery Configuration -->
+    <ZenithWallpaperModal
+      v-model="isWallpaperModalOpen"
+      :current-url="currentWpUrl"
+      :wallpapers="wallpapers"
+      @select-wallpaper="handleSelectWallpaper"
+      @reset-default="handleResetWallpaper"
     />
 
     <!-- Toast Notification -->

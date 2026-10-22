@@ -9,7 +9,7 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'filterCategory', cat: ZenithCategoryKey): void
-  (e: 'toggleWallpaper'): void
+  (e: 'openWallpaperModal'): void
   (e: 'openAddModal'): void
   (e: 'showTip'): void
 }>()
@@ -76,18 +76,18 @@ const dockTabs: DockTab[] = [
         </span>
       </button>
 
-      <!-- Wallpaper cycle -->
+      <!-- Wallpaper settings modal -->
       <button
         class="relative group p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all hover:scale-105 cursor-pointer"
-        title="切换壁纸/视觉"
+        title="壁纸与背景设置"
         type="button"
-        @click="emit('toggleWallpaper')"
+        @click="emit('openWallpaperModal')"
       >
         <span class="material-symbols-outlined text-[20px]">wallpaper</span>
         <span
           class="absolute left-14 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-white text-[11px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50"
         >
-          切换壁纸氛围
+          壁纸与背景设置
         </span>
       </button>
     </div>

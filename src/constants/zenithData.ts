@@ -14,7 +14,7 @@ import wereadIcon from '@/assets/icons/weread.jpg'
 import wpsIcon from '@/assets/icons/wps.jpg'
 import xiaohongshuIcon from '@/assets/icons/xiaohongshu.jpg'
 import zhihuIcon from '@/assets/icons/zhihu.jpg'
-import type { HotShortcut, ZenithBookmark, ZenithCategoryTab, ZenithEngine } from '@/types/zenith'
+import type { HotShortcut, ZenithBookmark, ZenithCategoryTab, ZenithEngine, ZenithWallpaperItem } from '@/types/zenith'
 
 export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
   // 1. 豆包
@@ -205,21 +205,21 @@ export const CATEGORY_TABS: ZenithCategoryTab[] = [
 
 export const ENGINES: ZenithEngine[] = [
   {
-    id: 'google',
-    name: '谷歌 Google',
-    icon: 'G',
-    iconBg: 'bg-blue-500',
-    url: 'https://www.google.com/search',
-    param: 'q',
-    shortcutKey: '1',
-  },
-  {
     id: 'baidu',
     name: '百度 Baidu',
     icon: '度',
     iconBg: 'bg-blue-600',
     url: 'https://www.baidu.com/s',
     param: 'wd',
+    shortcutKey: '1',
+  },
+  {
+    id: 'google',
+    name: '谷歌 Google',
+    icon: 'G',
+    iconBg: 'bg-blue-500',
+    url: 'https://www.google.com/search',
+    param: 'q',
     shortcutKey: '2',
   },
   {
@@ -250,8 +250,80 @@ export const HOT_SHORTCUTS: HotShortcut[] = [
   { label: '爱奇艺', url: 'https://www.iqiyi.com' },
 ]
 
-export const WALLPAPERS = [
-  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=80',
-  'https://images.unsplash.com/photo-1511497584788-87676104235f?auto=format&fit=crop&w=2560&q=80',
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2560&q=80',
+export const DEFAULT_WALLPAPER_URL =
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuAJrPQJZnHdwLhoQOGMES9Fc7xBuSv_ZXE8gibMJEZZxq87QtXT5063lTFuYSTlj30kufJJGW_e3CyN6tPIH9hlZ4nKxnDSPwfViOI4JxJj0ANXYkNubGyCMY6T2X0izmbVHXFs8lEwBIMjDkCF_to6vV6Z53_8FZ80HPWpCguS2eodqpfuHCKh9juMgQ7btGDddyExWsDZ5cDLL3uhP8sZGyrhx3x_4C5Dgzu1RB45m9i2ffFdyXtk'
+
+export const PRESET_WALLPAPERS: ZenithWallpaperItem[] = [
+  {
+    id: 'twilight',
+    name: '暮光自然',
+    category: 'nature',
+    url: DEFAULT_WALLPAPER_URL,
+  },
+  {
+    id: 'snow_mountain',
+    name: '雪山极境',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'forest',
+    name: '雾林晨光',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'mountain_lake',
+    name: '高山静湖',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'fuji',
+    name: '富士落日',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'ocean',
+    name: '碧海清波',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'sunlight',
+    name: '绿林光影',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'galaxy',
+    name: '深邃星河',
+    category: 'universe',
+    url: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'aurora',
+    name: '梦幻极光',
+    category: 'universe',
+    url: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'desert',
+    name: '荒漠红日',
+    category: 'nature',
+    url: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'cyber_city',
+    name: '赛博都市',
+    category: 'urban',
+    url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=2560&q=80',
+  },
+  {
+    id: 'dark_abstract',
+    name: '极简暗纹',
+    category: 'abstract',
+    url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=2560&q=80',
+  },
 ]
