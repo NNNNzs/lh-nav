@@ -21,7 +21,6 @@ const {
   activeCategory,
   filteredBookmarks,
   categoryTabs,
-  storageSize,
   setCategory,
   addBookmark,
   resetLayout,
@@ -57,7 +56,7 @@ function handleSaveBookmark(payload: { title: string; url: string; desc: string;
     return
   }
   addBookmark(payload)
-  showToast(`小组件「${payload.title}」已成功保存至本地！`)
+  showToast(`小组件「${payload.title}」已成功添加！`)
 }
 
 function handleTogglePin(id: string) {
@@ -151,7 +150,6 @@ const wallpaperStyle = computed(() => {
 
     <!-- Modern Floating Bottom Status Bar -->
     <ZenithFooter
-      :storage-size="storageSize"
       @reset-layout="handleResetLayout"
     />
 

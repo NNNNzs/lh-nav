@@ -16,7 +16,7 @@ const emit = defineEmits<{
     <!-- User Profile Avatar -->
     <button
       class="relative group p-1 transition cursor-pointer"
-      title="个人空间"
+      title="用户中心"
       type="button"
     >
       <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-amber-400 to-rose-400 p-0.5 shadow-md">

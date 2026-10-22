@@ -20,7 +20,7 @@ const emit = defineEmits<{
         </div>
         <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/25 backdrop-blur-xl border border-white/15 text-white/80 text-xs select-none">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span>离线可用 · 已同步本地沙盒</span>
+          <span>极简工作台 · 专注高效</span>
         </div>
       </div>
 

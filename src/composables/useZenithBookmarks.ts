@@ -78,26 +78,11 @@ export function useZenithBookmarks() {
     save()
   }
 
-  const storageSize = computed(() => {
-    try {
-      let total = 0
-      for (const k in localStorage) {
-        if (Object.prototype.hasOwnProperty.call(localStorage, k)) {
-          total += (localStorage[k]?.length || 0) * 2
-        }
-      }
-      return `${Math.max(18.2, total / 1024).toFixed(1)} KB`
-    } catch {
-      return '18.2 KB'
-    }
-  })
-
   return {
     bookmarks,
     activeCategory,
     filteredBookmarks,
     categoryTabs: CATEGORY_TABS,
-    storageSize,
     setCategory,
     addBookmark,
     resetLayout,
