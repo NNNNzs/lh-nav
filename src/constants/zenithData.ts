@@ -247,7 +247,7 @@ export const HOT_SHORTCUTS: HotShortcut[] = [
 ]
 
 export const DEFAULT_WALLPAPER_URL =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAJrPQJZnHdwLhoQOGMES9Fc7xBuSv_ZXE8gibMJEZZxq87QtXT5063lTFuYSTlj30kufJJGW_e3CyN6tPIH9hlZ4nKxnDSPwfViOI4JxJj0ANXYkNubGyCMY6T2X0izmbVHXFs8lEwBIMjDkCF_to6vV6Z53_8FZ80HPWpCguS2eodqpfuHCKh9juMgQ7btGDddyExWsDZ5cDLL3uhP8sZGyrhx3x_4C5Dgzu1RB45m9i2ffFdyXtk'
+  'https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?auto=format&fit=crop&w=2560&q=80'
 
 export const PRESET_WALLPAPERS: ZenithWallpaperItem[] = [
   {
