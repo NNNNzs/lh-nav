@@ -48,10 +48,6 @@ function handleResetWallpaper() {
   showToast('已恢复默认暮光壁纸')
 }
 
-function handleShowTip() {
-  showToast('快捷键: Tab 聚焦搜索, 1-4 快捷切换搜索引擎')
-}
-
 function handleResetLayout() {
   resetLayout()
   showToast('已重置布局为默认推荐')
@@ -111,7 +107,6 @@ const wallpaperStyle = computed(() => {
       @filter-category="handleFilterCategory"
       @open-wallpaper-modal="isWallpaperModalOpen = true"
       @open-add-modal="isAddModalOpen = true"
-      @show-tip="handleShowTip"
     />
 
     <!-- Top Glass Header -->
