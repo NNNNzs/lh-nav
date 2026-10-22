@@ -1,203 +1,167 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ToastContainer from '@/components/common/ToastContainer.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
-import AppHeader from '@/components/layout/AppHeader.vue'
-import AppSidebar from '@/components/layout/AppSidebar.vue'
-import CategoryManageModal from '@/components/modal/CategoryManageModal.vue'
-import DataBackupModal from '@/components/modal/DataBackupModal.vue'
-import ItemEditModal from '@/components/modal/ItemEditModal.vue'
-import CategorySection from '@/components/nav/CategorySection.vue'
-import EmptyState from '@/components/nav/EmptyState.vue'
-import SearchBar from '@/components/search/SearchBar.vue'
-import SearchSpotlightModal from '@/components/search/SearchSpotlightModal.vue'
-import { useNavigationData } from '@/composables/useNavigationData'
-import { useTheme } from '@/composables/useTheme'
+import ZenithAddCardModal from '@/components/modals/ZenithAddCardModal.vue'
+import ZenithAiChatModal from '@/components/modals/ZenithAiChatModal.vue'
+import ZenithFocusModal from '@/components/modals/ZenithFocusModal.vue'
+import ZenithSettingsModal from '@/components/modals/ZenithSettingsModal.vue'
+import ZenithCardGrid from '@/components/zenith/ZenithCardGrid.vue'
+import ZenithCategoryTabs from '@/components/zenith/ZenithCategoryTabs.vue'
+import ZenithDock from '@/components/zenith/ZenithDock.vue'
+import ZenithFooter from '@/components/zenith/ZenithFooter.vue'
+import ZenithHeader from '@/components/zenith/ZenithHeader.vue'
+import ZenithHeroClock from '@/components/zenith/ZenithHeroClock.vue'
+import ZenithSearchBar from '@/components/zenith/ZenithSearchBar.vue'
+import ZenithAiWidget from '@/components/zenith/ZenithAiWidget.vue'
+import ZenithFocusWidget from '@/components/zenith/ZenithFocusWidget.vue'
 import { useToast } from '@/composables/useToast'
-import type { NavItem } from '@/types/nav'
+import { useZenithStorage } from '@/composables/useZenithStorage'
+import type { ZenithCard } from '@/types/zenith'
 
-// Initialize Theme
-useTheme()
-
-// Initialize Navigation Data Composable
 const {
   categories,
-  items,
-  filters,
-  filteredItems,
-  groupedCategories,
-  allTags,
-  categoryCountMap,
-  statistics,
-  addItem,
-  updateItem,
-  deleteItem,
-  toggleFavorite,
-  addCategory,
-  updateCategory,
-  deleteCategory,
-  setCategoryFilter,
-  setTagFilter,
-  toggleFavoriteFilter,
-  resetFilters,
-  exportBackup,
-  importBackup,
+  activeCategoryId,
+  activeCards,
+  categoryCounts,
+  storageSizeStr,
+  addCard,
+  togglePin,
   resetToDefault,
-} = useNavigationData()
+} = useZenithStorage()
 
 const { success } = useToast()
 
-// UI state
-const isSidebarOpen = ref(false)
-const isSpotlightOpen = ref(false)
-const isItemModalOpen = ref(false)
-const isCategoryModalOpen = ref(false)
-const isBackupModalOpen = ref(false)
+// Modals
+const isAddModalOpen = ref(false)
+const isAiModalOpen = ref(false)
+const isFocusModalOpen = ref(false)
+const isSettingsModalOpen = ref(false)
 
-const editingItem = ref<NavItem | null>(null)
-const prefillCategoryId = ref<string | null>(null)
+// Background style
+const bgTheme = ref<'default' | 'midnight' | 'sunset'>('default')
 
-// Item modal openers
-function openCreateItem(categoryId?: string): void {
-  editingItem.value = null
-  prefillCategoryId.value = categoryId || null
-  isItemModalOpen.value = true
+function handleAddCard(cardData: Omit<ZenithCard, 'id' | 'sortOrder'>) {
+  addCard(cardData)
+  success('添加成功', `已将 ${cardData.title} 加入导航卡片`)
 }
 
-function openEditItem(item: NavItem): void {
-  editingItem.value = item
-  prefillCategoryId.value = item.categoryId
-  isItemModalOpen.value = true
-}
-
-function handleSaveItem(itemData: Omit<NavItem, 'id' | 'createdAt' | 'updatedAt'>, id?: string): void {
-  if (id) {
-    updateItem(id, itemData)
-    success('站点修改成功')
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(() => {})
   } else {
-    addItem(itemData)
-    success('站点添加成功')
+    document.exitFullscreen().catch(() => {})
   }
 }
 
-function handleDeleteItem(id: string): void {
-  if (window.confirm('确定要删除该导航站点吗？')) {
-    deleteItem(id)
-    success('站点已删除')
+function handleThemeToggle() {
+  if (bgTheme.value === 'default') {
+    bgTheme.value = 'midnight'
+  } else if (bgTheme.value === 'midnight') {
+    bgTheme.value = 'sunset'
+  } else {
+    bgTheme.value = 'default'
   }
+  success('背景切换', '已切换氛围渐变色')
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50/80 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
-    <!-- Header -->
-    <AppHeader
-      :is-sidebar-open="isSidebarOpen"
-      :total-items="statistics.totalItems"
-      @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
-      @open-spotlight="isSpotlightOpen = true"
-      @open-add-item="openCreateItem()"
-      @open-manage-category="isCategoryModalOpen = true"
-      @open-backup="isBackupModalOpen = true"
+  <div
+    class="min-h-screen text-slate-100 flex flex-col justify-between relative overflow-x-hidden selection:bg-emerald-500/30 transition-colors duration-500 font-sans"
+    :class="[
+      bgTheme === 'midnight'
+        ? 'bg-gradient-to-br from-[#121c2e] via-[#0d2228] to-[#071318]'
+        : bgTheme === 'sunset'
+          ? 'bg-gradient-to-br from-[#381f28] via-[#2a1d27] to-[#122320]'
+          : 'bg-gradient-to-br from-[#403825] via-[#21372b] to-[#122e23]',
+    ]"
+  >
+    <!-- Background Radial Glow Layers for Authenticity -->
+    <div
+      class="fixed inset-0 pointer-events-none z-0"
+      style="background: radial-gradient(circle at 12% 18%, rgba(217, 168, 85, 0.18), transparent 45%), radial-gradient(circle at 88% 75%, rgba(16, 185, 129, 0.22), transparent 50%), radial-gradient(circle at 50% 50%, rgba(20, 60, 45, 0.35), transparent 75%);"
+    ></div>
+
+    <!-- Left Floating Dock Sidebar -->
+    <ZenithDock
+      @open-ai="isAiModalOpen = true"
+      @toggle-theme="handleThemeToggle"
+      @toggle-fullscreen="toggleFullscreen"
+      @open-add-card="isAddModalOpen = true"
+      @open-settings="isSettingsModalOpen = true"
     />
 
-    <!-- Main Container with Sidebar -->
-    <div class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex gap-8 pt-6">
-      <!-- Sidebar -->
-      <AppSidebar
-        :is-open="isSidebarOpen"
-        :categories="categories"
-        :category-count-map="categoryCountMap"
-        :active-category-id="filters.categoryId"
-        :only-favorites="filters.onlyFavorites"
-        :total-items="statistics.totalItems"
-        :total-favorites="statistics.totalFavorites"
-        @close="isSidebarOpen = false"
-        @select-category="setCategoryFilter($event)"
-        @select-favorites="toggleFavoriteFilter"
-        @open-manage-category="isCategoryModalOpen = true"
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-14 flex-1 flex flex-col justify-between">
+      <!-- 1. Header Bar -->
+      <ZenithHeader
+        @open-add-card="isAddModalOpen = true"
+        @toggle-theme="handleThemeToggle"
       />
 
-      <!-- Content Area -->
-      <main class="flex-1 min-w-0 space-y-8">
-        <!-- Top Search & Filter Bar -->
-        <SearchBar
-          v-model:keyword="filters.keyword"
-          :active-tag="filters.tag"
-          :only-favorites="filters.onlyFavorites"
-          :all-tags="allTags"
-          :total-matches="filteredItems.length"
-          @clear-tag="setTagFilter(null)"
-          @select-tag="setTagFilter($event)"
-          @toggle-favorites="toggleFavoriteFilter"
-          @open-spotlight="isSpotlightOpen = true"
-        />
+      <!-- 2. Hero Clock & Greeting -->
+      <ZenithHeroClock />
 
-        <!-- Category Sections -->
-        <div v-if="groupedCategories.length > 0" class="space-y-12">
-          <CategorySection
-            v-for="group in groupedCategories"
-            :key="group.category.id"
-            :category="group.category"
-            :items="group.items"
-            @add-item="openCreateItem($event)"
-            @edit-item="openEditItem($event)"
-            @delete-item="handleDeleteItem($event)"
-            @toggle-favorite="toggleFavorite($event)"
-            @filter-tag="setTagFilter($event)"
-          />
-        </div>
+      <!-- 3. Central Rounded Search Pill & Hot Direct Shortcuts -->
+      <ZenithSearchBar />
 
-        <!-- Empty State -->
-        <EmptyState
-          v-else
-          title="未找到匹配的站点"
-          description="尝试调整搜索关键词、清除分类筛选或特别收藏过滤"
-          @reset="resetFilters"
+      <!-- 4. Category Tab Bar -->
+      <ZenithCategoryTabs
+        :categories="categories"
+        :active-id="activeCategoryId"
+        :counts="categoryCounts"
+        @select-category="activeCategoryId = $event"
+        @open-add-card="isAddModalOpen = true"
+      />
+
+      <!-- 5. Feature Widgets Row (Focus Tracker + AI Copilot) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 my-3">
+        <ZenithFocusWidget
+          @open-focus="isFocusModalOpen = true"
+          @open-todos="isFocusModalOpen = true"
         />
-      </main>
+        <ZenithAiWidget
+          @open-ai="isAiModalOpen = true"
+        />
+      </div>
+
+      <!-- 6. Navigation 4x3 Cards Grid -->
+      <div class="my-3">
+        <ZenithCardGrid
+          :cards="activeCards"
+          @toggle-pin="togglePin"
+          @open-add-card="isAddModalOpen = true"
+        />
+      </div>
+
+      <!-- 7. Footer Status & Info Bar -->
+      <ZenithFooter
+        :storage-size="storageSizeStr"
+        @reset-layout="resetToDefault"
+      />
     </div>
 
-    <!-- Footer -->
-    <AppFooter
-      :total-categories="statistics.totalCategories"
-      :total-items="statistics.totalItems"
-      :total-favorites="statistics.totalFavorites"
-      @open-backup="isBackupModalOpen = true"
-    />
-
     <!-- Modals -->
-    <ItemEditModal
-      v-model="isItemModalOpen"
+    <ZenithAddCardModal
+      v-model="isAddModalOpen"
       :categories="categories"
-      :editing-item="editingItem"
-      :default-category-id="prefillCategoryId"
-      @save="handleSaveItem"
+      @add-card="handleAddCard"
     />
 
-    <CategoryManageModal
-      v-model="isCategoryModalOpen"
-      :categories="categories"
-      :category-count-map="categoryCountMap"
-      @add-category="addCategory"
-      @update-category="updateCategory"
-      @delete-category="deleteCategory"
+    <ZenithAiChatModal
+      v-model="isAiModalOpen"
     />
 
-    <DataBackupModal
-      v-model="isBackupModalOpen"
-      :export-data="exportBackup"
-      :import-data="importBackup"
-      :reset-to-default="resetToDefault"
+    <ZenithFocusModal
+      v-model="isFocusModalOpen"
     />
 
-    <SearchSpotlightModal
-      v-model="isSpotlightOpen"
-      :items="items"
-      :categories="categories"
+    <ZenithSettingsModal
+      v-model="isSettingsModalOpen"
+      @change-background="bgTheme = $event as any"
     />
 
-    <!-- Global Toasts -->
+    <!-- Toast Notifications -->
     <ToastContainer />
   </div>
 </template>
