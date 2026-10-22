@@ -2,26 +2,99 @@
 
 @variant dark (&:where(.dark, .dark *));
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+body {
+  font-family: "Inter", "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+.icon-fill {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.4);
-  border-radius: 9999px;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(156, 163, 175, 0.7);
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Dynamic gentle background lighting from prototype */
+.bg-twilight-nature {
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(251, 146, 60, 0.28), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.22), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(34, 197, 94, 0.2), transparent 50%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, rgba(15, 23, 42, 0.1) 40%, rgba(15, 23, 42, 0.45) 100%),
+    url(https://lh3.googleusercontent.com/aida-public/AB6AXuAJrPQJZnHdwLhoQOGMES9Fc7xBuSv_ZXE8gibMJEZZxq87QtXT5063lTFuYSTlj30kufJJGW_e3CyN6tPIH9hlZ4nKxnDSPwfViOI4JxJj0ANXYkNubGyCMY6T2X0izmbVHXFs8lEwBIMjDkCF_to6vV6Z53_8FZ80HPWpCguS2eodqpfuHCKh9juMgQ7btGDddyExWsDZ5cDLL3uhP8sZGyrhx3x_4C5Dgzu1RB45m9i2ffFdyXtk);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.card-glass-dark {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.squircle {
+  border-radius: 22%;
+}
+
+/* Custom Glass & Icon Shadows matching tailwind config in prototype */
+.shadow-glass {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12), inset 0 1px 0 0 rgba(255, 255, 255, 0.25);
+}
+
+.shadow-glass-subtle {
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.08), inset 0 1px 0 0 rgba(255, 255, 255, 0.35);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+}
+
+.shadow-icon {
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-in {
+  animation: fadeInZoom 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

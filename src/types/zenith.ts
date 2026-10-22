@@ -1,67 +1,36 @@
-export type BrandIconKey =
-  | 'github'
-  | 'figma'
-  | 'chatgpt'
-  | 'notion'
-  | 'vercel'
-  | 'juejin'
-  | 'dribbble'
-  | 'sspai'
-  | 'bilibili'
-  | 'zhihu'
-  | 'v2ex'
-  | 'custom'
+export type ZenithCategoryKey = 'all' | 'work' | 'dev' | 'design' | 'life'
 
-export interface ZenithCard {
+export type IconKind = 'svg' | 'material' | 'text'
+
+export interface ZenithBookmark {
   id: string
   title: string
-  description: string
+  desc: string
   url: string
-  iconKey: BrandIconKey
-  customIcon?: string
-  iconBg?: string
-  categoryId: string
-  isPinned?: boolean
-  sortOrder: number
+  category: ZenithCategoryKey
+  iconKind: IconKind
+  iconValue: string
+  iconBg: string
+  isPinned: boolean
 }
 
-export interface ZenithCategory {
-  id: string
-  name: string
-  sortOrder: number
-}
-
-export interface SearchEngine {
+export interface ZenithEngine {
   id: string
   name: string
   icon: string
-  searchUrl: string
-  placeholder: string
+  iconBg: string
+  url: string
+  param: string
+  shortcutKey: string
 }
 
-export interface WeatherData {
-  temperature: number
-  condition: string
-  icon: string
-  city: string
+export interface ZenithCategoryTab {
+  id: ZenithCategoryKey
+  name: string
+  count?: number
 }
 
-export interface FocusStats {
-  days: number
-  startDate: string
-  focusMinutesToday: number
-  todosCount: number
-}
-
-export interface TodoItem {
-  id: string
-  title: string
-  completed: boolean
-}
-
-export interface AiChatMessage {
-  id: string
-  role: 'user' | 'assistant'
-  content: string
-  timestamp: string
+export interface HotShortcut {
+  label: string
+  url: string
 }

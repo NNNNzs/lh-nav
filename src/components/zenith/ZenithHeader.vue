@@ -1,84 +1,58 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { DEFAULT_WEATHER } from '@/constants/zenithData'
-
 const emit = defineEmits<{
-  (e: 'openAddCard'): void
-  (e: 'toggleTheme'): void
+  (e: 'openAddModal'): void
+  (e: 'toggleWallpaper'): void
 }>()
-
-const weather = ref(DEFAULT_WEATHER)
-const isNightMode = ref(false)
-
-function handleTheme() {
-  isNightMode.value = !isNightMode.value
-  emit('toggleTheme')
-}
 </script>
 
 <template>
-  <header class="w-full flex items-center justify-between gap-4 pt-5 pb-3">
-    <!-- Left Badges -->
-    <div class="flex items-center gap-3">
-      <!-- 极简标签 Zenith Badge -->
-      <div
-        class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-white shadow-sm"
-      >
-        <!-- Blue icon box -->
-        <div class="w-4 h-4 rounded-md bg-[#3b82f6] flex items-center justify-center text-white">
-          <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 24 24">
-            <path d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h6v6h-6v-6z" />
-          </svg>
+  <header class="relative z-30 w-full px-4 sm:px-8 pt-4 pb-2">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Left: Zenith Brand & Sync Pill -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/30 shadow-glass transition-all select-none">
+          <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-500 to-sky-400 flex items-center justify-center text-white shadow-sm">
+            <span class="material-symbols-outlined text-[15px]">grid_view</span>
+          </div>
+          <span class="text-sm font-semibold text-white tracking-tight drop-shadow-sm">
+            极简标签 <span class="text-[10px] font-normal px-1.5 py-0.5 bg-white/20 text-white/90 rounded-md ml-0.5">Zenith</span>
+          </span>
         </div>
-        <span class="text-xs font-semibold tracking-wide">极简标签</span>
-        <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-white/10 text-white/70 font-mono">
-          Zenith
-        </span>
+        <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/25 backdrop-blur-xl border border-white/15 text-white/80 text-xs select-none">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>离线可用 · 已同步本地沙盒</span>
+        </div>
       </div>
 
-      <!-- 离线可用已同步本地沙盒 -->
-      <div
-        class="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-white/80 shadow-sm"
-      >
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>离线可用 · 已同步本地沙盒</span>
+      <!-- Right: Action Pills -->
+      <div class="flex items-center gap-2.5">
+        <!-- Weather pill widget -->
+        <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/20 backdrop-blur-xl border border-white/25 text-white shadow-glass text-xs select-none">
+          <span class="material-symbols-outlined text-amber-300 text-[18px]">partly_cloudy_day</span>
+          <span class="font-medium">21°C</span>
+          <span class="text-white/60">晴间多云</span>
+        </div>
+
+        <!-- Add Card button -->
+        <button
+          type="button"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/30 text-white text-xs font-medium shadow-glass transition-all active:scale-95 cursor-pointer select-none"
+          @click="emit('openAddModal')"
+        >
+          <span class="material-symbols-outlined text-[16px]">add</span>
+          <span>添加卡片</span>
+        </button>
+
+        <!-- Wallpaper visual toggle button -->
+        <button
+          type="button"
+          class="p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/30 text-white transition-all shadow-glass cursor-pointer"
+          title="外观风格"
+          @click="emit('toggleWallpaper')"
+        >
+          <span class="material-symbols-outlined text-[18px]">dark_mode</span>
+        </button>
       </div>
-    </div>
-
-    <!-- Right Controls -->
-    <div class="flex items-center gap-2.5">
-      <!-- Weather Widget -->
-      <div
-        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs text-white/90 shadow-sm cursor-pointer hover:bg-white/15 transition select-none"
-      >
-        <span class="text-amber-300">{{ weather.icon }}</span>
-        <span class="font-bold">{{ weather.temperature }}°C</span>
-        <span class="text-white/70">{{ weather.condition }}</span>
-      </div>
-
-      <!-- Add Card Button -->
-      <button
-        type="button"
-        class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 backdrop-blur-md border border-white/15 text-xs font-semibold text-white shadow-sm transition cursor-pointer"
-        @click="emit('openAddCard')"
-      >
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        <span>添加卡片</span>
-      </button>
-
-      <!-- Theme / Moon Toggle -->
-      <button
-        type="button"
-        class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 backdrop-blur-md border border-white/15 flex items-center justify-center text-white/80 hover:text-white transition cursor-pointer"
-        title="切换主题"
-        @click="handleTheme"
-      >
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
-          <path d="M21.64 13a1 1 0 00-1.05-.14 8.049 8.049 0 01-3.37.73 8.15 8.15 0 01-8.14-8.1 8.59 8.59 0 01.25-2 1 1 0 00-1.3-1.07A10 10 0 1022 14.05a1 1 0 00-.36-1.05z" />
-        </svg>
-      </button>
     </div>
   </header>
 </template>

@@ -1,167 +1,170 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import ToastContainer from '@/components/common/ToastContainer.vue'
-import ZenithAddCardModal from '@/components/modals/ZenithAddCardModal.vue'
-import ZenithAiChatModal from '@/components/modals/ZenithAiChatModal.vue'
-import ZenithFocusModal from '@/components/modals/ZenithFocusModal.vue'
-import ZenithSettingsModal from '@/components/modals/ZenithSettingsModal.vue'
+import { computed, ref } from 'vue'
+import ZenithBookmarkModal from '@/components/zenith/ZenithBookmarkModal.vue'
 import ZenithCardGrid from '@/components/zenith/ZenithCardGrid.vue'
 import ZenithCategoryTabs from '@/components/zenith/ZenithCategoryTabs.vue'
 import ZenithDock from '@/components/zenith/ZenithDock.vue'
+import ZenithFocusWidget from '@/components/zenith/ZenithFocusWidget.vue'
 import ZenithFooter from '@/components/zenith/ZenithFooter.vue'
 import ZenithHeader from '@/components/zenith/ZenithHeader.vue'
 import ZenithHeroClock from '@/components/zenith/ZenithHeroClock.vue'
 import ZenithSearchBar from '@/components/zenith/ZenithSearchBar.vue'
+import ZenithToast from '@/components/zenith/ZenithToast.vue'
 import ZenithAiWidget from '@/components/zenith/ZenithAiWidget.vue'
-import ZenithFocusWidget from '@/components/zenith/ZenithFocusWidget.vue'
-import { useToast } from '@/composables/useToast'
-import { useZenithStorage } from '@/composables/useZenithStorage'
-import type { ZenithCard } from '@/types/zenith'
+import { useZenithBookmarks } from '@/composables/useZenithBookmarks'
+import { useZenithToast } from '@/composables/useZenithToast'
+import { useZenithWallpaper } from '@/composables/useZenithWallpaper'
+import type { ZenithCategoryKey } from '@/types/zenith'
 
 const {
-  categories,
-  activeCategoryId,
-  activeCards,
-  categoryCounts,
-  storageSizeStr,
-  addCard,
-  togglePin,
-  resetToDefault,
-} = useZenithStorage()
+  bookmarks,
+  activeCategory,
+  filteredBookmarks,
+  categoryTabs,
+  storageSize,
+  setCategory,
+  addBookmark,
+  resetLayout,
+} = useZenithBookmarks()
 
-const { success } = useToast()
+const { isCustomWp, currentWpUrl, toggleWallpaper } = useZenithWallpaper()
+const { isVisible: isToastVisible, toastText, showToast } = useZenithToast()
 
-// Modals
 const isAddModalOpen = ref(false)
-const isAiModalOpen = ref(false)
-const isFocusModalOpen = ref(false)
-const isSettingsModalOpen = ref(false)
 
-// Background style
-const bgTheme = ref<'default' | 'midnight' | 'sunset'>('default')
-
-function handleAddCard(cardData: Omit<ZenithCard, 'id' | 'sortOrder'>) {
-  addCard(cardData)
-  success('添加成功', `已将 ${cardData.title} 加入导航卡片`)
+function handleFilterCategory(cat: ZenithCategoryKey) {
+  setCategory(cat)
+  showToast('已筛选分类')
 }
 
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {})
-  } else {
-    document.exitFullscreen().catch(() => {})
+function handleToggleWallpaper() {
+  toggleWallpaper()
+  showToast('已切换精美暮光/自然壁纸')
+}
+
+function handleShowTip() {
+  showToast('快捷键: Tab 聚焦搜索, 1-4 快捷切换搜索引擎')
+}
+
+function handleResetLayout() {
+  resetLayout()
+  showToast('已重置布局为默认推荐')
+}
+
+function handleSaveBookmark(payload: { title: string; url: string; desc: string; category: ZenithCategoryKey }) {
+  if (!payload.title || !payload.url) {
+    showToast('请填写网站名称和网址')
+    return
+  }
+  addBookmark(payload)
+  showToast(`小组件「${payload.title}」已成功保存至本地！`)
+}
+
+function handleTogglePin(id: string) {
+  const item = bookmarks.value.find(b => b.id === id)
+  if (item) {
+    item.isPinned = !item.isPinned
+    showToast(item.isPinned ? `已置顶「${item.title}」` : `已取消置顶「${item.title}」`)
   }
 }
 
-function handleThemeToggle() {
-  if (bgTheme.value === 'default') {
-    bgTheme.value = 'midnight'
-  } else if (bgTheme.value === 'midnight') {
-    bgTheme.value = 'sunset'
-  } else {
-    bgTheme.value = 'default'
+const wallpaperStyle = computed(() => {
+  if (!isCustomWp.value) {
+    return {}
   }
-  success('背景切换', '已切换氛围渐变色')
-}
+  return {
+    backgroundImage: `
+      radial-gradient(circle at 15% 20%, rgba(251, 146, 60, 0.28), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.22), transparent 45%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, rgba(15, 23, 42, 0.1) 40%, rgba(15, 23, 42, 0.45) 100%),
+      url('${currentWpUrl.value}')
+    `,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundAttachment: 'fixed',
+  }
+})
 </script>
 
 <template>
   <div
-    class="min-h-screen text-slate-100 flex flex-col justify-between relative overflow-x-hidden selection:bg-emerald-500/30 transition-colors duration-500 font-sans"
-    :class="[
-      bgTheme === 'midnight'
-        ? 'bg-gradient-to-br from-[#121c2e] via-[#0d2228] to-[#071318]'
-        : bgTheme === 'sunset'
-          ? 'bg-gradient-to-br from-[#381f28] via-[#2a1d27] to-[#122320]'
-          : 'bg-gradient-to-br from-[#403825] via-[#21372b] to-[#122e23]',
-    ]"
+    class="min-h-screen bg-twilight-nature text-slate-800 antialiased selection:bg-white/30 selection:text-white relative flex flex-col justify-between overflow-x-hidden font-sans"
+    :style="wallpaperStyle"
   >
-    <!-- Background Radial Glow Layers for Authenticity -->
-    <div
-      class="fixed inset-0 pointer-events-none z-0"
-      style="background: radial-gradient(circle at 12% 18%, rgba(217, 168, 85, 0.18), transparent 45%), radial-gradient(circle at 88% 75%, rgba(16, 185, 129, 0.22), transparent 50%), radial-gradient(circle at 50% 50%, rgba(20, 60, 45, 0.35), transparent 75%);"
-    ></div>
+    <!-- Ambient Light Overlay for readability & softness -->
+    <div class="fixed inset-0 pointer-events-none bg-black/15 backdrop-blur-[0.5px] z-0"></div>
 
-    <!-- Left Floating Dock Sidebar -->
+    <!-- Left Dock Navigation (WeTab inspired sleek vertical dock) -->
     <ZenithDock
-      @open-ai="isAiModalOpen = true"
-      @toggle-theme="handleThemeToggle"
-      @toggle-fullscreen="toggleFullscreen"
-      @open-add-card="isAddModalOpen = true"
-      @open-settings="isSettingsModalOpen = true"
+      @filter-category="handleFilterCategory"
+      @toggle-wallpaper="handleToggleWallpaper"
+      @open-add-modal="isAddModalOpen = true"
+      @show-tip="handleShowTip"
     />
 
-    <!-- Main Container -->
-    <div class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-14 flex-1 flex flex-col justify-between">
-      <!-- 1. Header Bar -->
-      <ZenithHeader
-        @open-add-card="isAddModalOpen = true"
-        @toggle-theme="handleThemeToggle"
-      />
+    <!-- Top Glass Header -->
+    <ZenithHeader
+      @open-add-modal="isAddModalOpen = true"
+      @toggle-wallpaper="handleToggleWallpaper"
+    />
 
-      <!-- 2. Hero Clock & Greeting -->
+    <!-- Main Center Content -->
+    <main class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 md:pl-20 py-4 flex flex-col items-center flex-1 justify-center">
+      <!-- Hero Time & Atmospheric Greeting -->
       <ZenithHeroClock />
 
-      <!-- 3. Central Rounded Search Pill & Hot Direct Shortcuts -->
-      <ZenithSearchBar />
+      <!-- Capsule Search Bar (WeTab / Modern SuperTab pill style) -->
+      <ZenithSearchBar
+        @show-toast="showToast"
+      />
 
-      <!-- 4. Category Tab Bar -->
+      <!-- Category Tabs Navigation Filter -->
       <ZenithCategoryTabs
-        :categories="categories"
-        :active-id="activeCategoryId"
-        :counts="categoryCounts"
-        @select-category="activeCategoryId = $event"
-        @open-add-card="isAddModalOpen = true"
+        :tabs="categoryTabs"
+        :active-category="activeCategory"
+        :total-count="bookmarks.length"
+        @select-category="handleFilterCategory"
+        @open-add-modal="isAddModalOpen = true"
       />
 
-      <!-- 5. Feature Widgets Row (Focus Tracker + AI Copilot) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 my-3">
-        <ZenithFocusWidget
-          @open-focus="isFocusModalOpen = true"
-          @open-todos="isFocusModalOpen = true"
-        />
-        <ZenithAiWidget
-          @open-ai="isAiModalOpen = true"
-        />
-      </div>
+      <!-- Grid Container with WeTab-inspired Multi-Sized Widget Layout -->
+      <div class="w-full space-y-4">
+        <!-- Top Row Feature Widgets: Large Anniversary/Focus Widget + Daily Quote / AI Assistant Widget -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ZenithFocusWidget
+            @open-focus="showToast('已进入专注计时')"
+            @open-todos="showToast('打开待办清单 (共 4 项)')"
+          />
+          <ZenithAiWidget
+            @open-ai="showToast('正在呼出 Zenith 智能助手...')"
+          />
+        </div>
 
-      <!-- 6. Navigation 4x3 Cards Grid -->
-      <div class="my-3">
+        <!-- Main Navigation Cards Grid: Squircle WeTab Style with custom high-fidelity icons -->
         <ZenithCardGrid
-          :cards="activeCards"
-          @toggle-pin="togglePin"
-          @open-add-card="isAddModalOpen = true"
+          :cards="filteredBookmarks"
+          @toggle-pin="handleTogglePin"
+          @open-add-modal="isAddModalOpen = true"
         />
       </div>
+    </main>
 
-      <!-- 7. Footer Status & Info Bar -->
-      <ZenithFooter
-        :storage-size="storageSizeStr"
-        @reset-layout="resetToDefault"
-      />
-    </div>
+    <!-- Modern Floating Bottom Status Bar -->
+    <ZenithFooter
+      :storage-size="storageSize"
+      @reset-layout="handleResetLayout"
+    />
 
-    <!-- Modals -->
-    <ZenithAddCardModal
+    <!-- Modal: Add / Edit Bookmark -->
+    <ZenithBookmarkModal
       v-model="isAddModalOpen"
-      :categories="categories"
-      @add-card="handleAddCard"
+      @save="handleSaveBookmark"
     />
 
-    <ZenithAiChatModal
-      v-model="isAiModalOpen"
+    <!-- Toast Notification -->
+    <ZenithToast
+      :visible="isToastVisible"
+      :text="toastText"
     />
-
-    <ZenithFocusModal
-      v-model="isFocusModalOpen"
-    />
-
-    <ZenithSettingsModal
-      v-model="isSettingsModalOpen"
-      @change-background="bgTheme = $event as any"
-    />
-
-    <!-- Toast Notifications -->
-    <ToastContainer />
   </div>
 </template>

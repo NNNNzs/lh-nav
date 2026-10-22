@@ -1,61 +1,82 @@
 <script setup lang="ts">
-import BrandIcon from '@/components/zenith/BrandIcon.vue'
-import type { ZenithCard } from '@/types/zenith'
+import type { ZenithBookmark } from '@/types/zenith'
 
 interface Props {
-  card: ZenithCard
+  card: ZenithBookmark
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'clickCard', card: ZenithCard): void
   (e: 'togglePin', id: string): void
 }>()
-
-function handleClick() {
-  window.open(props.card.url, '_blank')
-  emit('clickCard', props.card)
-}
 </script>
 
 <template>
-  <div
-    class="relative rounded-2xl bg-white/10 hover:bg-white/15 active:scale-[0.98] backdrop-blur-xl border border-white/15 hover:border-white/30 p-3.5 sm:p-4 flex items-center justify-between gap-3 shadow-md hover:shadow-xl transition-all duration-200 cursor-pointer group select-none overflow-hidden"
-    @click="handleClick"
+  <a
+    :href="card.url"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="nav-item group flex items-center gap-3.5 p-3.5 rounded-2xl bg-white/80 hover:bg-white/95 backdrop-blur-xl border border-white/70 shadow-glass-subtle hover:shadow-[0_12px_28px_rgba(0,0,0,0.14)] hover:-translate-y-1 transition-all duration-200"
+    :data-cat="card.category"
   >
-    <!-- Left: Brand Icon + Text info -->
-    <div class="flex items-center gap-3.5 min-w-0 flex-1">
-      <BrandIcon
-        :icon-key="card.iconKey"
-        :custom-icon="card.customIcon"
-        class="group-hover:scale-105 transition-transform duration-200"
-      />
+    <!-- Card Icon Box -->
+    <div
+      class="w-12 h-12 rounded-2xl text-white flex items-center justify-center shrink-0 shadow-icon group-hover:scale-105 transition-transform"
+      :class="[
+        card.iconBg,
+        card.id === 'notion' || card.id === 'sspai' ? 'font-serif font-black text-xl' : '',
+        card.id === 'zhihu' ? 'font-bold text-lg' : '',
+        card.id === 'v2ex' ? 'font-mono font-bold text-sm' : '',
+      ]"
+    >
+      <!-- SVG Icon -->
+      <svg
+        v-if="card.iconKind === 'svg'"
+        :class="card.id === 'vercel' ? 'w-5 h-5 fill-white' : 'w-6 h-6 fill-white'"
+        viewBox="0 0 24 24"
+      >
+        <path :d="card.iconValue" />
+      </svg>
 
-      <div class="min-w-0 flex-1">
-        <div class="flex items-center gap-2">
-          <h4 class="text-sm sm:text-base font-bold text-white truncate tracking-tight">
-            {{ card.title }}
-          </h4>
-        </div>
-        <p class="text-xs text-white/60 truncate mt-0.5 leading-relaxed">
-          {{ card.description || card.url }}
-        </p>
-      </div>
+      <!-- Material Symbols Icon -->
+      <span
+        v-else-if="card.iconKind === 'material'"
+        class="material-symbols-outlined"
+        :class="card.iconValue === 'psychology' ? 'text-[26px]' : 'text-[24px]'"
+      >
+        {{ card.iconValue }}
+      </span>
+
+      <!-- Text / Initial Character Icon -->
+      <span v-else>
+        {{ card.iconValue }}
+      </span>
     </div>
 
-    <!-- Right: Pin Icon -->
-    <button
-      type="button"
-      class="shrink-0 p-1 text-amber-400 hover:scale-110 transition cursor-pointer"
-      :class="[card.isPinned ? 'opacity-90' : 'opacity-30 hover:opacity-80']"
-      :title="card.isPinned ? '取消置顶' : '固定在推荐'"
-      @click.stop="emit('togglePin', card.id)"
-    >
-      <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-        <!-- Pin icon -->
-        <path d="M16 9V4l1 0c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1l1 0v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z" />
-      </svg>
-    </button>
-  </div>
+    <!-- Title and Subtitle Info -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between">
+        <h4 class="text-sm font-bold text-slate-800 truncate group-hover:text-indigo-600 transition-colors">
+          {{ card.title }}
+        </h4>
+        <button
+          type="button"
+          class="p-0.5 rounded transition-colors cursor-pointer"
+          :title="card.isPinned ? '取消置顶' : '置顶卡片'"
+          @click.prevent.stop="emit('togglePin', card.id)"
+        >
+          <span
+            class="material-symbols-outlined text-[15px] transition-colors"
+            :class="card.isPinned ? 'text-amber-500 icon-fill' : 'text-slate-400 group-hover:text-amber-500'"
+          >
+            push_pin
+          </span>
+        </button>
+      </div>
+      <p class="text-[11px] text-slate-500 truncate mt-0.5">
+        {{ card.desc }}
+      </p>
+    </div>
+  </a>
 </template>

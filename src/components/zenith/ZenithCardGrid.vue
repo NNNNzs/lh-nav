@@ -1,33 +1,30 @@
 <script setup lang="ts">
 import ZenithAddCardSlot from '@/components/zenith/ZenithAddCardSlot.vue'
 import ZenithNavCard from '@/components/zenith/ZenithNavCard.vue'
-import type { ZenithCard } from '@/types/zenith'
+import type { ZenithBookmark } from '@/types/zenith'
 
 interface Props {
-  cards: ZenithCard[]
+  cards: ZenithBookmark[]
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'clickCard', card: ZenithCard): void
   (e: 'togglePin', id: string): void
-  (e: 'openAddCard'): void
+  (e: 'openAddModal'): void
 }>()
 </script>
 
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-    <!-- List of cards -->
+  <section class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5" id="cards-grid">
     <ZenithNavCard
       v-for="card in cards"
       :key="card.id"
       :card="card"
-      @click-card="emit('clickCard', $event)"
       @toggle-pin="emit('togglePin', $event)"
     />
-
-    <!-- 12th card: Add Card Slot -->
-    <ZenithAddCardSlot @click="emit('openAddCard')" />
-  </div>
+    <ZenithAddCardSlot
+      @click="emit('openAddModal')"
+    />
+  </section>
 </template>

@@ -1,60 +1,58 @@
 <script setup lang="ts">
-import type { ZenithCategory } from '@/types/zenith'
+import type { ZenithCategoryKey, ZenithCategoryTab } from '@/types/zenith'
 
 interface Props {
-  categories: ZenithCategory[]
-  activeId: string
-  counts: Record<string, number>
+  tabs: ZenithCategoryTab[]
+  activeCategory: ZenithCategoryKey
+  totalCount: number
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'selectCategory', id: string): void
-  (e: 'openAddCard'): void
+  (e: 'selectCategory', cat: ZenithCategoryKey): void
+  (e: 'openAddModal'): void
 }>()
 </script>
 
 <template>
-  <div class="w-full flex items-center justify-between gap-4 pt-6 pb-2 select-none">
-    <!-- Category Tabs Group -->
+  <section class="w-full mb-6 flex items-center justify-between">
+    <!-- Category Tabs Filter Bar -->
     <div
-      class="inline-flex items-center gap-1 p-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 overflow-x-auto max-w-full"
+      class="flex items-center gap-1.5 p-1 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/20 shadow-glass overflow-x-auto no-scrollbar"
     >
       <button
-        v-for="cat in categories"
-        :key="cat.id"
+        v-for="tab in tabs"
+        :key="tab.id"
         type="button"
-        class="shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition cursor-pointer"
+        class="cat-pill px-4 py-1.5 rounded-xl text-xs transition-all cursor-pointer select-none"
         :class="[
-          activeId === cat.id
-            ? 'bg-white text-slate-900 shadow-sm'
-            : 'text-white/70 hover:text-white hover:bg-white/10',
+          activeCategory === tab.id
+            ? 'active font-semibold bg-white text-slate-900 shadow-md'
+            : 'font-medium text-white/80 hover:text-white hover:bg-white/15',
         ]"
-        @click="emit('selectCategory', cat.id)"
+        @click="emit('selectCategory', tab.id)"
       >
-        <span>{{ cat.name }}</span>
+        <span>{{ tab.name }}</span>
         <span
-          v-if="cat.id === 'featured'"
-          class="text-[10px] font-mono font-bold"
-          :class="[activeId === cat.id ? 'text-slate-900' : 'text-white/60']"
+          v-if="tab.id === 'all'"
+          class="ml-1 px-1.5 py-0.2 text-[10px] bg-slate-100 text-slate-700 rounded-full font-mono"
         >
-          {{ counts[cat.id] || 11 }}
+          {{ totalCount }}
         </span>
       </button>
     </div>
 
-    <!-- Right Add Card Shortcut -->
-    <button
-      type="button"
-      class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 backdrop-blur-md border border-white/15 text-xs font-medium text-white/90 transition cursor-pointer"
-      @click="emit('openAddCard')"
-    >
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9" stroke-width="2" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v8m-4-4h8" />
-      </svg>
-      <span>添加卡片</span>
-    </button>
-  </div>
+    <!-- Right Side Add Card Button -->
+    <div class="hidden sm:flex items-center gap-2">
+      <button
+        type="button"
+        class="text-xs text-white/90 hover:text-white flex items-center gap-1 px-3 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/20 transition-all shadow-glass cursor-pointer select-none"
+        @click="emit('openAddModal')"
+      >
+        <span class="material-symbols-outlined text-[16px]">add_circle</span>
+        <span>添加卡片</span>
+      </button>
+    </div>
+  </section>
 </template>
