@@ -117,7 +117,7 @@ const wallpaperStyle = computed(() => {
     />
 
     <!-- Main Center Content -->
-    <main class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 md:pl-20 py-4 flex flex-col items-center flex-1 justify-center">
+    <main class="relative z-20 w-full max-w-6xl mx-auto px-4 sm:px-6 md:pl-20 py-4 flex flex-col items-center flex-1 justify-start">
       <!-- Hero Time & Atmospheric Greeting -->
       <ZenithHeroClock />
 
