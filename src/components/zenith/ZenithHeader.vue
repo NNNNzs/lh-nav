@@ -46,11 +46,11 @@ const emit = defineEmits<{
         <!-- Wallpaper visual modal button -->
         <button
           type="button"
-          class="p-2 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-xl border border-white/30 text-white transition-all shadow-glass cursor-pointer"
-          title="壁纸设置"
+          class="w-8 h-8 rounded-full aspect-square flex items-center justify-center shrink-0 bg-white/20 hover:bg-white/30 active:scale-95 backdrop-blur-xl border border-white/30 text-white transition-all shadow-glass cursor-pointer"
+          title="壁纸与背景氛围设置"
           @click="emit('openWallpaperModal')"
         >
-          <span class="material-symbols-outlined text-[18px]">wallpaper</span>
+          <span class="material-symbols-outlined text-[18px] leading-none">wallpaper</span>
         </button>
       </div>
     </div>
