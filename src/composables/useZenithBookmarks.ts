@@ -42,10 +42,16 @@ export function useZenithBookmarks() {
   })
 
   const filteredBookmarks = computed(() => {
-    if (activeCategory.value === 'all') {
-      return bookmarks.value
-    }
-    return bookmarks.value.filter(b => b.category === activeCategory.value)
+    const list = activeCategory.value === 'all'
+      ? [...bookmarks.value]
+      : bookmarks.value.filter(b => b.category === activeCategory.value)
+
+    // 真正实现置顶：被置顶的卡片自动优先排在最前列
+    return list.sort((a, b) => {
+      if (a.isPinned && !b.isPinned) return -1
+      if (!a.isPinned && b.isPinned) return 1
+      return 0
+    })
   })
 
   function setCategory(cat: ZenithCategoryKey) {
