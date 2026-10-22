@@ -14,7 +14,7 @@ import ZenithAiWidget from '@/components/zenith/ZenithAiWidget.vue'
 import { useZenithBookmarks } from '@/composables/useZenithBookmarks'
 import { useZenithToast } from '@/composables/useZenithToast'
 import { useZenithWallpaper } from '@/composables/useZenithWallpaper'
-import type { ZenithCategoryKey } from '@/types/zenith'
+import type { IconKind, ZenithCategoryKey } from '@/types/zenith'
 
 const {
   bookmarks,
@@ -50,7 +50,15 @@ function handleResetLayout() {
   showToast('已重置布局为默认推荐')
 }
 
-function handleSaveBookmark(payload: { title: string; url: string; desc: string; category: ZenithCategoryKey }) {
+function handleSaveBookmark(payload: {
+  title: string
+  url: string
+  desc: string
+  category: ZenithCategoryKey
+  iconKind: IconKind
+  iconValue: string
+  iconBg?: string
+}) {
   if (!payload.title || !payload.url) {
     showToast('请填写网站名称和网址')
     return

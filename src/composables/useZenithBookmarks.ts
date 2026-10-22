@@ -1,6 +1,6 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { CATEGORY_TABS, DEFAULT_BOOKMARKS } from '@/constants/zenithData'
-import type { ZenithBookmark, ZenithCategoryKey } from '@/types/zenith'
+import type { IconKind, ZenithBookmark, ZenithCategoryKey } from '@/types/zenith'
 
 const STORAGE_KEY = 'zenith_tab_bookmarks_v2'
 
@@ -52,10 +52,34 @@ export function useZenithBookmarks() {
     activeCategory.value = cat
   }
 
-  function addBookmark(item: { title: string; url: string; desc?: string; category: ZenithCategoryKey }) {
+  function addBookmark(item: {
+    title: string
+    url: string
+    desc?: string
+    category: ZenithCategoryKey
+    iconKind?: IconKind
+    iconValue?: string
+    iconBg?: string
+  }) {
     let url = item.url.trim()
     if (!/^https?:\/\//i.test(url)) {
       url = `https://${url}`
+    }
+
+    let iconKind = item.iconKind || 'img'
+    let iconValue = item.iconValue?.trim() || ''
+    let iconBg = item.iconBg || ''
+
+    if (!iconValue) {
+      try {
+        const domain = new URL(url).hostname
+        iconKind = 'img'
+        iconValue = `https://api.iowen.cn/favicon/${domain}.png`
+      } catch {
+        iconKind = 'text'
+        iconValue = item.title.trim().charAt(0) || '网'
+        iconBg = 'bg-gradient-to-br from-indigo-500 to-sky-500'
+      }
     }
 
     const newBm: ZenithBookmark = {
@@ -64,9 +88,9 @@ export function useZenithBookmarks() {
       desc: item.desc?.trim() || '快捷网站组件',
       url,
       category: item.category,
-      iconKind: 'material',
-      iconValue: 'bookmark',
-      iconBg: 'bg-gradient-to-br from-indigo-500 to-sky-500',
+      iconKind,
+      iconValue,
+      iconBg,
       isPinned: false,
     }
     bookmarks.value.push(newBm)
