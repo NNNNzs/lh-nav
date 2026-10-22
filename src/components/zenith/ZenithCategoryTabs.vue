@@ -16,7 +16,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <section class="w-full mb-6 flex items-center justify-between">
+  <section class="w-full mb-6 flex items-center justify-between relative z-10">
     <!-- Category Tabs Filter Bar -->
     <div
       class="flex items-center gap-1.5 p-1 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/20 shadow-glass overflow-x-auto no-scrollbar"

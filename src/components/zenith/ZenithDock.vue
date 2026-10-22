@@ -1,12 +1,32 @@
 <script setup lang="ts">
 import type { ZenithCategoryKey } from '@/types/zenith'
 
+interface Props {
+  activeCategory: ZenithCategoryKey
+}
+
+defineProps<Props>()
+
 const emit = defineEmits<{
   (e: 'filterCategory', cat: ZenithCategoryKey): void
   (e: 'toggleWallpaper'): void
   (e: 'openAddModal'): void
   (e: 'showTip'): void
 }>()
+
+interface DockTab {
+  id: ZenithCategoryKey
+  name: string
+  icon: string
+}
+
+const dockTabs: DockTab[] = [
+  { id: 'all', name: '常用推荐', icon: 'home' },
+  { id: 'work', name: '工作协同', icon: 'work' },
+  { id: 'dev', name: '开发技术', icon: 'auto_awesome' },
+  { id: 'design', name: '设计灵感', icon: 'palette' },
+  { id: 'life', name: '资讯探索', icon: 'explore' },
+]
 </script>
 
 <template>
@@ -33,50 +53,26 @@ const emit = defineEmits<{
 
     <div class="w-5 h-[1px] bg-white/15 my-0.5"></div>
 
-    <!-- Navigation items -->
+    <!-- Navigation items (fully linked with activeCategory) -->
     <div class="flex flex-col items-center gap-2">
-      <!-- Home -->
       <button
-        class="relative group p-2 rounded-xl bg-white/25 text-white shadow-inner transition-all hover:scale-105 cursor-pointer"
-        title="主页导航"
+        v-for="tab in dockTabs"
+        :key="tab.id"
+        class="relative group p-2 rounded-xl transition-all cursor-pointer"
+        :class="[
+          activeCategory === tab.id
+            ? 'bg-white/25 text-white shadow-inner scale-105'
+            : 'text-white/70 hover:text-white hover:bg-white/15 hover:scale-105',
+        ]"
+        :title="tab.name"
         type="button"
-        @click="emit('filterCategory', 'all')"
+        @click="emit('filterCategory', tab.id)"
       >
-        <span class="material-symbols-outlined text-[20px] text-white">home</span>
+        <span class="material-symbols-outlined text-[20px]">{{ tab.icon }}</span>
         <span
           class="absolute left-14 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-white text-[11px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50"
         >
-          主页导航
-        </span>
-      </button>
-
-      <!-- AI & Tech -->
-      <button
-        class="relative group p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all hover:scale-105 cursor-pointer"
-        title="AI 助手 & 开发"
-        type="button"
-        @click="emit('filterCategory', 'dev')"
-      >
-        <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
-        <span
-          class="absolute left-14 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-white text-[11px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50"
-        >
-          AI & 技术
-        </span>
-      </button>
-
-      <!-- Design Inspiration -->
-      <button
-        class="relative group p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all hover:scale-105 cursor-pointer"
-        title="设计灵感"
-        type="button"
-        @click="emit('filterCategory', 'design')"
-      >
-        <span class="material-symbols-outlined text-[20px]">palette</span>
-        <span
-          class="absolute left-14 px-2.5 py-1 rounded-lg bg-black/80 backdrop-blur-md text-white text-[11px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-50"
-        >
-          设计灵感
+          {{ tab.name }}
         </span>
       </button>
 
@@ -101,7 +97,7 @@ const emit = defineEmits<{
     <!-- Bottom Actions -->
     <button
       class="relative group p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all hover:scale-105 cursor-pointer"
-      title="添加网站组件"
+      title="添加组件卡片"
       type="button"
       @click="emit('openAddModal')"
     >
@@ -115,7 +111,7 @@ const emit = defineEmits<{
 
     <button
       class="relative group p-2 rounded-xl text-white/70 hover:text-white hover:bg-white/15 transition-all hover:scale-105 cursor-pointer"
-      title="系统设置"
+      title="偏好设置"
       type="button"
       @click="emit('showTip')"
     >

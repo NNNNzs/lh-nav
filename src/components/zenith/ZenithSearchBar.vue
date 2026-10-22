@@ -27,10 +27,10 @@ function setInputRef(el: any) {
 </script>
 
 <template>
-  <section class="w-full max-w-2xl mb-8">
-    <div class="relative group">
+  <section class="w-full max-w-2xl mb-8 relative z-30">
+    <div class="relative group z-30">
       <form
-        class="relative flex items-center bg-white/95 hover:bg-white focus-within:bg-white backdrop-blur-2xl rounded-full p-1.5 shadow-2xl border border-white/60 transition-all duration-300 ring-4 ring-white/10 focus-within:ring-white/30"
+        class="relative z-30 flex items-center bg-white/95 hover:bg-white focus-within:bg-white backdrop-blur-2xl rounded-full p-1.5 shadow-2xl border border-white/60 transition-all duration-300 ring-4 ring-white/10 focus-within:ring-white/30"
         @submit.prevent="handleSearch"
       >
         <!-- Engine Selector Button -->

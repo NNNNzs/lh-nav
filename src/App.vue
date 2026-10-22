@@ -95,6 +95,7 @@ const wallpaperStyle = computed(() => {
 
     <!-- Left Dock Navigation (WeTab inspired sleek vertical dock) -->
     <ZenithDock
+      :active-category="activeCategory"
       @filter-category="handleFilterCategory"
       @toggle-wallpaper="handleToggleWallpaper"
       @open-add-modal="isAddModalOpen = true"
