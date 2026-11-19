@@ -27,7 +27,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     category: 'ai',
     iconKind: 'img',
     iconValue: doubaoIcon,
-    isPinned: true,
+    isPinned: false,
   },
   // 2. 知乎
   {
@@ -38,7 +38,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     category: 'social',
     iconKind: 'img',
     iconValue: zhihuIcon,
-    isPinned: true,
+    isPinned: false,
   },
   // 3. 网易云音乐
   {
@@ -49,7 +49,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     category: 'media',
     iconKind: 'img',
     iconValue: neteaseIcon,
-    isPinned: true,
+    isPinned: false,
   },
   // 4. 抖音
   {
@@ -60,7 +60,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     category: 'media',
     iconKind: 'img',
     iconValue: douyinIcon,
-    isPinned: true,
+    isPinned: false,
   },
   // 5. 爱奇艺
   {
@@ -183,7 +183,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     iconValue: baiduIcon,
     isPinned: false,
   },
-  // 15. 淘宝
+  // 16. 淘宝
   {
     id: 'taobao',
     title: '淘宝',
@@ -194,7 +194,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     iconValue: taobaoIcon,
     isPinned: false,
   },
-  // 16. 京东
+  // 17. 京东
   {
     id: 'jd',
     title: '京东',
@@ -208,7 +208,7 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
 ]
 
 export const CATEGORY_TABS: ZenithCategoryTab[] = [
-  { id: 'all', name: '常用推荐', count: 16 },
+  { id: 'all', name: '常用推荐' },
   { id: 'work', name: '办公效率' },
   { id: 'ai', name: 'AI 助手' },
   { id: 'media', name: '影音娱乐' },

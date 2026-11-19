@@ -22,6 +22,7 @@ const {
   activeCategory,
   filteredBookmarks,
   categoryTabs,
+  totalCount,
   setCategory,
   addBookmark,
   resetLayout,
@@ -129,7 +130,7 @@ const wallpaperStyle = computed(() => {
       <ZenithCategoryTabs
         :tabs="categoryTabs"
         :active-category="activeCategory"
-        :total-count="bookmarks.length"
+        :total-count="totalCount"
         @select-category="handleFilterCategory"
         @open-add-modal="isAddModalOpen = true"
       />
