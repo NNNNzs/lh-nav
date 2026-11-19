@@ -1,4 +1,5 @@
 import baiduIcon from '@/assets/icons/baidu.jpg'
+import capcutIcon from '@/assets/icons/capcut.jpg'
 import bilibiliIcon from '@/assets/icons/bilibili.jpg'
 import doubaoIcon from '@/assets/icons/doubao.jpg'
 import douyinIcon from '@/assets/icons/douyin.jpg'
@@ -154,13 +155,24 @@ export const DEFAULT_BOOKMARKS: ZenithBookmark[] = [
     id: 'quark',
     title: '夸克',
     desc: '极速智能搜索与高效云端网盘办公',
-    url: 'https://www.quark.cn',
+    url: 'https://www.anmafan.com/goUrl/quarkXian/ls/sm3035903',
     category: 'work',
     iconKind: 'img',
     iconValue: quarkIcon,
-    isPinned: false,
+    isPinned: true,
   },
-  // 14. 百度
+  // 14. 剪映
+  {
+    id: 'capcut',
+    title: '剪映',
+    desc: '剪映视频创作',
+    url: 'https://www.anmafan.com/goUrl/dongXianAugTwo',
+    category: 'media',
+    iconKind: 'img',
+    iconValue: capcutIcon,
+    isPinned: true,
+  },
+  // 15. 百度
   {
     id: 'baidu',
     title: '百度',

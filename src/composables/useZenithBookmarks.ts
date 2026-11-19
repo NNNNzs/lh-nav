@@ -2,7 +2,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { CATEGORY_TABS, DEFAULT_BOOKMARKS } from '@/constants/zenithData'
 import type { IconKind, ZenithBookmark, ZenithCategoryKey } from '@/types/zenith'
 
-const STORAGE_KEY = 'zenith_tab_bookmarks_v2'
+const STORAGE_KEY = 'zenith_tab_bookmarks_v3'
 
 export function useZenithBookmarks() {
   const bookmarks = ref<ZenithBookmark[]>([])
